@@ -1,0 +1,71 @@
+{
+  "name": "mock_hr_connector",
+  "description": "Example FedMCP connector for HR systems (uses mock data)",
+  "version": "1.0.0",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "action": {
+        "type": "string",
+        "description": "Action to perform",
+        "enum": ["get_employee", "list_department", "list_all"]
+      },
+      "employee_id": {
+        "type": "string",
+        "description": "Employee ID (for get_employee action)"
+      },
+      "department": {
+        "type": "string",
+        "description": "Department name (for list_department action)"
+      }
+    },
+    "required": ["action"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "description": "Response data"
+      },
+      "_metadata": {
+        "type": "object",
+        "description": "FedMCP compliance metadata"
+      }
+    }
+  },
+  "compliance": {
+    "pii_handling": true,
+    "audit_log": true,
+    "data_classification": ["EXAMPLE_DATA"],
+    "retention_policy": "7 days",
+    "encryption": "TLS",
+    "signing": "JWS"
+  },
+  "capabilities": {
+    "batch_operations": false,
+    "streaming": false,
+    "caching": true,
+    "rate_limiting": true
+  },
+  "examples": {
+    "get_employee": {
+      "input": {
+        "action": "get_employee",
+        "employee_id": "12345"
+      },
+      "output": {
+        "data": {
+          "employee_id": "12345",
+          "first_name": "Alice",
+          "last_name": "Johnson",
+          "department": "Information Technology"
+        },
+        "_metadata": {
+          "artifact_type": "employee-record",
+          "connector": "mock-hr-connector"
+        }
+      }
+    }
+  }
+}

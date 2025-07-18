@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fmcpx"
+version = "1.0.0"
+description = "FedMCP Connector SDK - Open source framework for building FedMCP-compliant connectors"
+authors = [{ name = "FedMCP Community", email = "community@fedmcp.org" }]
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.8"
+dependencies = [
+    "typer>=0.9.0",
+    "aiohttp>=3.8.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.18.0",
+    "pytest-cov>=3.0.0",
+    "ruff>=0.1.0",
+    "black>=22.0.0",
+    "mypy>=0.950"
+]
+
+[project.scripts]
+fmcpx = "fmcpx.__main__:app"
+
+[project.urls]
+Homepage = "https://github.com/FedMCP/connectors"
+Documentation = "https://docs.fedmcp.org/connector-sdk"
+Issues = "https://github.com/FedMCP/connectors/issues"
+
+[tool.setuptools.packages.find]
+include = ["fmcpx*"]
+exclude = ["tests*", "examples*", "docs*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
