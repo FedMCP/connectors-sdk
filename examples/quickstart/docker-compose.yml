@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  fedmcp:
+    build: ../../server
+    ports:
+      - "8000:8000"
+    environment:
+      - STORAGE_TYPE=local
+      - SIGNING_TYPE=local
+      - LOCAL_STORAGE_PATH=/data
+    volumes:
+      - fedmcp-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Add a simple demo UI later
+  # demo-app:
+  #   build: ./demo-app
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - FEDMCP_URL=http://fedmcp:8000
+  #     - WORKSPACE_ID=00000000-0000-0000-0000-000000000001
+  #   depends_on:
+  #     - fedmcp
+
+volumes:
+  fedmcp-data:

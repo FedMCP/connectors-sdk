@@ -1,0 +1,27 @@
+{ "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"MCP-Fed v0.1",
+  "allOf":[{ "$ref":"mcp-base.schema.json" }],
+  "properties":{
+    "audit_log":{"type":"array","items":{"type":"object"}},
+    "pii_tag":{"type":"string","enum":["PII","PHI","FISMA"]},
+    "signed_response":{"oneOf":[{"type":"boolean"},{"type":"string","format":"jws"}]},
+    "impact_level":{"type":"string","enum":["IL2","IL4","IL5","IL6"]},
+    "tool_perms":{"type":"array","items":{"type":"string"}},
+    "spec_version": { "type": "string", "pattern": "^0\\.\\d+$" },
+    "issuer": { "type": "string", "format": "uri" },
+    "request_id": { "type": "string", "format": "uuid" },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "data_tags": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["PII","PHI","PCI","FISMA","CUI"] }
+    },
+    "is_signed": { "type": "boolean" },
+    "jws": { "type": "string", "format": "jws" },
+    "controls": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^(AC|AU|SC)-[0-9]+$" }
+    },
+    "impact_justification": { "type": "string", "maxLength": 256 }
+  },
+  "required":["audit_log","signed_response"]
+}

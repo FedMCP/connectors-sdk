@@ -1,0 +1,135 @@
+{
+  "type": "audit_script",
+  "version": 1,
+  "workspaceId": "550e8400-e29b-41d4-a716-446655440003",
+  "jsonBody": {
+    "scriptName": "HIPAA Compliance Audit for AI Clinical Tools",
+    "description": "Automated audit script to verify HIPAA compliance of AI-powered clinical decision support tools",
+    "version": "1.0.0",
+    "schedule": "0 2 * * *",
+    "compliance": ["HIPAA", "HITECH", "VA Directive 6518"],
+    "auditChecks": [
+      {
+        "id": "PHI-001",
+        "name": "PHI Access Control Verification",
+        "description": "Verify all PHI access is properly authenticated and authorized",
+        "query": {
+          "type": "cloudwatch_insights",
+          "logGroup": "/aws/va/clinical-ai",
+          "query": "fields @timestamp, userIdentity.principalId, requestParameters.patientId | filter eventName = 'AccessPatientData' | stats count() by userIdentity.principalId"
+        },
+        "threshold": {
+          "unauthorized_access": 0,
+          "excessive_access": "< 100 per user per day"
+        }
+      },
+      {
+        "id": "ENC-001", 
+        "name": "Encryption at Rest Verification",
+        "description": "Ensure all stored PHI is encrypted using FIPS 140-2 validated encryption",
+        "query": {
+          "type": "aws_config",
+          "rule": "encrypted-volumes",
+          "resources": ["s3", "ebs", "rds"]
+        },
+        "expectedResult": "100% compliant"
+      },
+      {
+        "id": "LOG-001",
+        "name": "Audit Log Integrity",
+        "description": "Verify audit logs are immutable and retained per policy",
+        "checks": [
+          "CloudTrail log file validation enabled",
+          "S3 bucket versioning enabled",
+          "Object lock configured for 7 years",
+          "No deletion events in audit trail"
+        ]
+      },
+      {
+        "id": "ACC-001",
+        "name": "Minimum Necessary Access",
+        "description": "Verify AI models only access minimum necessary PHI",
+        "query": {
+          "type": "custom",
+          "script": "analyze_model_data_access.py",
+          "parameters": {
+            "models": ["ClinicalBERT-VA", "PopHealthLLM-VA"],
+            "timeframe": "last_30_days"
+          }
+        },
+        "criteria": [
+          "No full record dumps",
+          "Field-level access controls enforced",
+          "Purpose limitation validated"
+        ]
+      },
+      {
+        "id": "RET-001",
+        "name": "Data Retention Compliance",
+        "description": "Verify PHI retention and disposal per policy",
+        "checks": [
+          "Training data purged after model training",
+          "Inference logs retained for 7 years",
+          "Patient consent tracking active",
+          "Right to deletion requests processed"
+        ]
+      },
+      {
+        "id": "BAA-001",
+        "name": "Business Associate Agreement Validation",
+        "description": "Ensure all third-party AI services have valid BAAs",
+        "inventory": [
+          {
+            "service": "AWS HealthLake",
+            "baaStatus": "active",
+            "expires": "2025-12-31"
+          },
+          {
+            "service": "Azure Cognitive Services",
+            "baaStatus": "active", 
+            "expires": "2025-06-30"
+          }
+        ]
+      }
+    ],
+    "reporting": {
+      "format": "NIST 800-66",
+      "recipients": [
+        "privacy.officer@va.gov",
+        "ciso@va.gov",
+        "ai.governance@va.gov"
+      ],
+      "frequency": "monthly",
+      "dashboard": "https://compliance.va.gov/ai-audit-dashboard"
+    },
+    "remediationWorkflow": {
+      "criticalFindings": {
+        "notification": "immediate",
+        "escalation": "CISO",
+        "sla": "24 hours"
+      },
+      "majorFindings": {
+        "notification": "next business day",
+        "escalation": "Privacy Officer",
+        "sla": "5 business days"
+      },
+      "minorFindings": {
+        "notification": "weekly report",
+        "escalation": "System Owner",
+        "sla": "30 days"
+      }
+    },
+    "automatedActions": [
+      {
+        "trigger": "unauthorized_phi_access",
+        "action": "disable_user_account",
+        "notification": "security_team"
+      },
+      {
+        "trigger": "encryption_disabled",
+        "action": "quarantine_resource",
+        "notification": "ops_team"
+      }
+    ]
+  }
+}

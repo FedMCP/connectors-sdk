@@ -1,0 +1,80 @@
+{
+  "type": "agent_recipe",
+  "version": 1,
+  "workspaceId": "550e8400-e29b-41d4-a716-446655440001",
+  "jsonBody": {
+    "name": "VA Clinical Decision Support Agent",
+    "description": "AI agent for supporting clinical decisions in VA healthcare facilities",
+    "version": "2.1.0",
+    "capabilities": [
+      "symptom_analysis",
+      "diagnostic_assistance", 
+      "treatment_recommendation",
+      "drug_interaction_checking",
+      "clinical_guideline_compliance"
+    ],
+    "compliance": {
+      "frameworks": ["HIPAA", "FedRAMP-High", "VA Directive 6518"],
+      "certifications": ["FDA 510(k) pending", "ONC Health IT Certified"],
+      "privacyControls": ["PHI encryption", "audit logging", "role-based access"]
+    },
+    "model": {
+      "architecture": "transformer",
+      "name": "ClinicalBERT-VA",
+      "version": "3.2.0",
+      "parameters": "13B",
+      "trainingData": {
+        "sources": ["VA EHR", "CDC Guidelines", "FDA Drug Database"],
+        "records": 2500000,
+        "dateRange": "2018-2023",
+        "deidentified": true
+      },
+      "finetuning": {
+        "method": "LoRA",
+        "dataset": "VA-specific clinical cases",
+        "samples": 50000
+      }
+    },
+    "validation": {
+      "testSet": "VA Test Cohort 2024",
+      "metrics": {
+        "accuracy": 0.943,
+        "sensitivity": 0.912,
+        "specificity": 0.967,
+        "f1Score": 0.931
+      },
+      "clinicalValidation": {
+        "reviewBoard": "VA Medical Advisory Board",
+        "approvalDate": "2024-12-15",
+        "limitations": [
+          "Not for emergency care decisions",
+          "Requires physician review",
+          "Limited to adult patients"
+        ]
+      }
+    },
+    "deployment": {
+      "environment": "VA Enterprise Cloud",
+      "region": "us-gov-west-1",
+      "endpoints": {
+        "inference": "https://cds.va.gov/api/v2/inference",
+        "feedback": "https://cds.va.gov/api/v2/feedback"
+      },
+      "sla": {
+        "availability": "99.9%",
+        "latency": "< 200ms p95",
+        "throughput": "1000 req/s"
+      }
+    },
+    "auditRequirements": {
+      "retentionDays": 2555,
+      "events": [
+        "model_invocation",
+        "recommendation_generated",
+        "physician_override",
+        "patient_outcome"
+      ],
+      "format": "FHIR AuditEvent"
+    }
+  }
+}

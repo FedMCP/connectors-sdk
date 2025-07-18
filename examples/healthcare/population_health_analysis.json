@@ -1,0 +1,128 @@
+{
+  "type": "llm_completion",
+  "version": 1,
+  "workspaceId": "550e8400-e29b-41d4-a716-446655440002",
+  "jsonBody": {
+    "analysisId": "PHA-2024-Q4-001",
+    "title": "Diabetes Risk Stratification for Rural Veterans",
+    "purpose": "Identify high-risk veterans in rural areas for targeted intervention",
+    "model": {
+      "name": "PopHealthLLM-VA",
+      "version": "1.5.0",
+      "type": "population_analytics"
+    },
+    "input": {
+      "query": "Analyze diabetes risk factors for veterans in rural ZIP codes with limited healthcare access",
+      "parameters": {
+        "population": "rural_veterans",
+        "condition": "diabetes_type_2",
+        "riskFactors": [
+          "BMI > 30",
+          "A1C > 6.5",
+          "family_history",
+          "sedentary_lifestyle",
+          "food_desert_residence"
+        ],
+        "timeframe": "2024-Q3",
+        "geography": "VISN 19 Rural Areas"
+      },
+      "dataSources": [
+        "VA CDW",
+        "CDC Social Vulnerability Index",
+        "USDA Food Access Research Atlas"
+      ]
+    },
+    "completion": {
+      "summary": "Identified 12,847 high-risk veterans in VISN 19 rural areas requiring intervention",
+      "riskCohorts": [
+        {
+          "level": "critical",
+          "count": 2341,
+          "characteristics": [
+            "A1C > 9.0",
+            "No PCP visit in 12 months",
+            "> 50 miles from VA facility"
+          ],
+          "recommendedIntervention": "Telehealth enrollment + mobile clinic"
+        },
+        {
+          "level": "high",
+          "count": 4506,
+          "characteristics": [
+            "A1C 7.0-9.0",
+            "Irregular medication adherence",
+            "Food desert residence"
+          ],
+          "recommendedIntervention": "Care coordinator + nutrition program"
+        },
+        {
+          "level": "moderate",
+          "count": 6000,
+          "characteristics": [
+            "A1C 6.5-7.0",
+            "BMI > 30",
+            "Limited specialty care access"
+          ],
+          "recommendedIntervention": "Quarterly monitoring + lifestyle coaching"
+        }
+      ],
+      "geospatialAnalysis": {
+        "hotspots": [
+          {
+            "county": "Rio Blanco, CO",
+            "riskScore": 8.7,
+            "barriers": ["distance", "specialist_shortage"]
+          },
+          {
+            "county": "Moffat, CO", 
+            "riskScore": 8.4,
+            "barriers": ["distance", "broadband_access"]
+          }
+        ]
+      },
+      "socialDeterminants": {
+        "foodInsecurity": "37% of cohort",
+        "transportationBarriers": "61% of cohort",
+        "economicInstability": "42% of cohort"
+      },
+      "recommendations": [
+        "Deploy mobile health units to Rio Blanco and Moffat counties",
+        "Expand telehealth diabetes management program",
+        "Partner with local food banks for nutrition programs",
+        "Establish community health worker program"
+      ],
+      "projectedOutcomes": {
+        "withIntervention": {
+          "a1cReduction": "1.2% average",
+          "erVisitReduction": "35%",
+          "costSavings": "$4.2M annually"
+        },
+        "withoutIntervention": {
+          "complications": "487 preventable amputations",
+          "hospitalizations": "1,243 diabetes-related",
+          "mortalityRisk": "127 excess deaths"
+        }
+      }
+    },
+    "metadata": {
+      "generatedAt": "2024-10-15T14:23:00Z",
+      "confidence": 0.89,
+      "dataQuality": {
+        "completeness": 0.94,
+        "recency": "30 days",
+        "validation": "Cross-referenced with state health records"
+      },
+      "ethicsReview": {
+        "board": "VA IRB",
+        "determination": "Quality improvement - exempt",
+        "fairnessAudit": "No bias detected across demographics"
+      }
+    },
+    "compliance": {
+      "deidentification": "Safe Harbor method",
+      "aggregationThreshold": "n >= 11",
+      "suppressedCells": 23,
+      "privacyRisk": "low"
+    }
+  }
+}

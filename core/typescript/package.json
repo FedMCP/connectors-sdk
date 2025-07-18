@@ -1,0 +1,39 @@
+{
+    "name": "@fedmcp/core",
+    "version": "0.2.0",
+    "description": "Federal Model Context Protocol - TypeScript implementation",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+      "build": "tsc",
+      "test": "jest",
+      "lint": "eslint src/**/*.ts",
+      "prepublishOnly": "npm run build"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/FedMCP/core.git"
+    },
+    "keywords": [
+      "fedmcp",
+      "fedramp",
+      "compliance",
+      "audit"
+    ],
+    "author": "FedMCP Community",
+    "license": "Apache-2.0",
+    "devDependencies": {
+      "@types/jest": "^29.5.0",
+      "@types/node": "^20.0.0",
+      "@typescript-eslint/eslint-plugin": "^6.0.0",
+      "@typescript-eslint/parser": "^6.0.0",
+      "eslint": "^8.0.0",
+      "jest": "^29.5.0",
+      "ts-jest": "^29.1.0",
+      "typescript": "^5.0.0"
+    },
+    "dependencies": {
+      "jose": "^5.0.0",
+      "uuid": "^9.0.0"
+    }
+  }
